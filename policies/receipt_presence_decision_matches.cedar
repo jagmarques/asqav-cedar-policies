@@ -10,6 +10,7 @@
 // this template only admits `permit` since deny / rate_limit / none are
 // not authorization-granting decisions.
 
+@id("receipt-presence-decision-matches")
 forbid (
     principal,
     action,

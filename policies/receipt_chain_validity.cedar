@@ -15,6 +15,7 @@
 // First receipt in a chain: the host passes priorReceiptHash="" and the
 // receipt carries prevHash="". Both equal, gate passes.
 
+@id("receipt-chain-validity")
 forbid (
     principal,
     action,
