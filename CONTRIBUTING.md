@@ -7,7 +7,7 @@ Templates are welcome. The repo's bar is:
 3. Compatible with the entity shapes the `cedar-for-agents` schema generator emits. If your pattern needs an extra entity shape, document the additional context field your host must supply.
 4. Apache-2.0 only. No GPL / LGPL / AGPL contributions.
 
-## Patterns currently looking for contributors
+## Patterns open for contribution
 
 - Signer-key binding (deny unless `context.receipt.signerKey` is one of `principal.boundKeys`).
 - Timestamp freshness (deny if `context.receipt.timestamp` is older than N seconds before `now()`).

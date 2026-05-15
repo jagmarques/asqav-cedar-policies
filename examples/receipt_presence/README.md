@@ -29,5 +29,5 @@ Remove `context.receipt` or set `context.receipt.policyDecision` to anything oth
 
 ## Notes for host implementors
 
-- Cedar treats the receipt as opaque structured context. Signature verification, key binding, and timestamp freshness are precondition checks that run before this policy gate; do not attempt to recompute signatures inside Cedar.
+- Cedar treats the receipt as opaque structured context. Signature verification, key binding, and timestamp freshness are precondition checks that run upstream of this policy gate; do not attempt to recompute signatures inside Cedar.
 - The `policyDecision` vocabulary is `permit | deny | rate_limit | none`; only `permit` is authorization-granting in this template.
