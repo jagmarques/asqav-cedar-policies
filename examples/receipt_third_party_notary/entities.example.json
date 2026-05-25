@@ -1,0 +1,21 @@
+[
+  {
+    "uid": { "type": "Agent", "id": "agt_demo" },
+    "attrs": {
+      "homeTenant": "org_demo"
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "Tool", "id": "search.web" },
+    "attrs": {},
+    "parents": []
+  },
+  {
+    "uid": { "type": "ToolInvocation", "id": "inv_777" },
+    "attrs": {
+      "owningTenant": "org_demo"
+    },
+    "parents": []
+  }
+]

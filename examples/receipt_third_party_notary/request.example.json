@@ -1,0 +1,17 @@
+{
+  "principal": { "type": "Agent", "id": "agt_demo" },
+  "action": { "type": "Tool", "id": "search.web" },
+  "resource": { "type": "ToolInvocation", "id": "inv_777" },
+  "context": {
+    "receipt": {
+      "signer": "notary.example.com",
+      "captureTopology": "third_party_notary",
+      "expiry": 1900000000,
+      "policyDecision": "permit",
+      "issuer_id": "org_demo",
+      "action_ref": "sha256:9b74c9897bac770ffc029102a200c5de"
+    },
+    "now": 1747000000,
+    "allowedNotaries": ["notary.example.com", "second-notary.example.org"]
+  }
+}

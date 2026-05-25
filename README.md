@@ -23,10 +23,11 @@ Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#8
 
 ## Status
 
-Initial scaffold. Two starter patterns from cedar-for-agents#80:
+Initial scaffold. Three starter patterns:
 
 1. `policies/receipt_presence_decision_matches.cedar` - deny unless `context.receipt.policyDecision` matches the action being authorized.
 2. `policies/receipt_chain_validity.cedar` - deny unless `context.receipt.prevHash` equals the canonical hash of the prior receipt that the host passed in as `context.priorReceiptHash`.
+3. `policies/receipt_third_party_notary.cedar` - deny unless `context.receipt.captureTopology` is `third_party_notary`, the signer is on the host's allow-list, and the receipt has not expired.
 
 Templates are welcome. Open a PR with a Cedar file under `policies/` plus a matching folder under `examples/` showing the entity shape and an `isAuthorized` invocation.
 
