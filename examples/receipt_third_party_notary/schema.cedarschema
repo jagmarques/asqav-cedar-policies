@@ -1,0 +1,35 @@
+// Schema fragment for receipt_third_party_notary.cedar.
+//
+// Mirrors the shapes the host MUST place on `context`. The Agent / Tool /
+// ToolInvocation entity types track the cedar-for-agents schema-generator
+// convention; adapt namespaces to whatever the host's generated schema
+// already uses.
+
+entity Agent {
+    homeTenant: String,
+};
+
+entity Tool;
+
+entity ToolInvocation {
+    owningTenant: String,
+};
+
+type Receipt = {
+    signer: String,
+    captureTopology: String,
+    expiry: Long,
+    policyDecision: String,
+    issuer_id: String,
+    action_ref: String,
+};
+
+action "invoke" appliesTo {
+    principal: [Agent],
+    resource: [ToolInvocation],
+    context: {
+        receipt: Receipt,
+        now: Long,
+        allowedNotaries: Set<String>,
+    },
+};
