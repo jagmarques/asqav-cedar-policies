@@ -1,6 +1,6 @@
 # asqav-cedar-policies
 
-Reusable Cedar policy templates for agent action receipts. Targets the entity-shape contract emitted by [cedar-policy/cedar-for-agents](https://github.com/cedar-policy/cedar-for-agents) so a host can drop a pack in next to whatever policies it already loads, without modifying the WASM surface or the schema generator.
+Reusable Cedar policy templates for agent action receipts. They target the entity-shape contract emitted by [cedar-policy/cedar-for-agents](https://github.com/cedar-policy/cedar-for-agents), so a host can drop a pack in next to whatever policies it already loads. There is no need to modify the WASM surface or the schema generator.
 
 Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#80](https://github.com/cedar-policy/cedar-for-agents/issues/80): policy templates live outside `cedar-policy/`.
 
