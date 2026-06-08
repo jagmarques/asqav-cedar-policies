@@ -6,7 +6,7 @@ Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#8
 
 ## What is in scope
 
-- Cedar policy text for cryptographic-receipt verification patterns (presence, chain validity, key binding).
+- Cedar policy text for cryptographic-receipt verification patterns: presence, chain validity, and key binding.
 - Examples that consume the entity shapes the cedar-for-agents schema generator already emits.
 - Helper entity-shape constructors if/when a Rust crate proves useful.
 
