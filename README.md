@@ -14,7 +14,7 @@ Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#8
 
 - Forking, vendoring, or patching `cedar-for-agents` itself.
 - Defining a new authorization API surface. The runtime call shape stays `isAuthorized(request, schema, policies)`.
-- Receipt format itself; that is the IETF Compliance Receipts work. The policies here verify the receipt as the host presents it on `context`.
+- Receipt format itself. That is the IETF Compliance Receipts work. The policies here verify the receipt as the host presents it on `context`.
 
 ## Layout
 
@@ -37,4 +37,4 @@ Apache-2.0, matching Cedar's own license so policies and examples can flow back 
 
 ## Provenance
 
-Maintained by [Asqav](https://asqav.com) alongside the IETF Compliance Receipts draft (`draft-marques-asqav-compliance-receipts`). Contributors from the Cedar community welcome; the repo is not Asqav-specific in its policy text, only in its initial maintainer set.
+Maintained by [Asqav](https://asqav.com) alongside the IETF Compliance Receipts draft (`draft-marques-asqav-compliance-receipts`). Contributors from the Cedar community welcome. The repo is not Asqav-specific in its policy text, only in its initial maintainer set.
