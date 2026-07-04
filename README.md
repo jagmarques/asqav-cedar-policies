@@ -2,7 +2,9 @@
 
 Reusable Cedar policy templates for agent action receipts. They target the entity-shape contract emitted by [cedar-policy/cedar-for-agents](https://github.com/cedar-policy/cedar-for-agents), so a host can drop a pack in next to whatever policies it already loads. There is no need to modify the WASM surface or the schema generator.
 
-Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#80](https://github.com/cedar-policy/cedar-for-agents/issues/80): policy templates live outside `cedar-policy/`.
+New here? Read [QUICKSTART.md](QUICKSTART.md) to go from zero to an Asqav receipt gating a tool call.
+
+Out-of-tree by design. The scope question of where receipt-verification templates belong was raised and closed on [cedar-for-agents#80](https://github.com/cedar-policy/cedar-for-agents/issues/80); policy templates live outside `cedar-policy/`, so this pack sits next to a host's Cedar policies rather than inside the engine. That is a resolved design decision, not a live dependency on the upstream repo.
 
 ## What is in scope
 
@@ -23,11 +25,12 @@ Out-of-tree by design. Tracks the maintainers' scope call on [cedar-for-agents#8
 
 ## Status
 
-Initial scaffold. Three starter patterns:
+Four starter patterns. Each is a Cedar `forbid` guardrail: it takes access away when a receipt fails a check and composes with the `permit` policies your host already loads. In isolation, with no `permit`, Cedar's default-deny returns `Deny`. See [QUICKSTART.md](QUICKSTART.md) for the layered evaluation.
 
 1. `policies/receipt_presence_decision_matches.cedar` - deny unless `context.receipt.policyDecision` matches the action being authorized.
 2. `policies/receipt_chain_validity.cedar` - deny unless `context.receipt.prevHash` equals the canonical hash of the prior receipt that the host passed in as `context.priorReceiptHash`.
 3. `policies/receipt_third_party_notary.cedar` - deny unless `context.receipt.captureTopology` is `third_party_notary`, the signer is on the host's allow-list, and the receipt has not expired.
+4. `policies/receipt_risk_class_ceiling.cedar` - deny when `context.receipt.risk_class` is `high` or `critical`.
 
 Templates are welcome. Open a PR with a Cedar file under `policies/` plus a matching folder under `examples/` showing the entity shape and an `isAuthorized` invocation.
 

@@ -47,7 +47,7 @@ What it deliberately does NOT do: signature cryptography, key-binding, or chain 
 
 ## Expected decision
 
-`isAuthorized` returns `Allow`. All four conditions are satisfied: topology is `third_party_notary`, signer is on the allow-list, expiry is in the future, and Cedar's default-deny is lifted by the absence of any explicit `forbid`.
+This template is a `forbid` guardrail, so it does not grant access on its own. Evaluate it next to the `permit` policy your host already uses to allow the tool call. With that `permit` loaded, the sample request satisfies all four conditions (topology is `third_party_notary`, signer is on the allow-list, expiry is in the future), so the `forbid` stays silent and the call is `Allow`. In isolation, with no `permit`, Cedar's default-deny returns `Deny`.
 
 ## Failure modes
 
@@ -70,19 +70,28 @@ What it deliberately does NOT do: signature cryptography, key-binding, or chain 
 2. Populate the `aux_data` block at request time with the same context fields shown above.
 3. Test via `cerbosctl decisions` against the example request.
 
-### Local `cedar authorize` smoke test
+### Local smoke test
 
-If you have the Cedar CLI installed (`cargo install cedar-policy-cli`):
+Because the template is a `forbid` guardrail, a smoke test loads a baseline
+`permit` alongside it. With Python and `cedarpy`:
 
-```bash
-cedar authorize \
-  --policies policies/receipt_third_party_notary.cedar \
-  --schema examples/receipt_third_party_notary/schema.cedarschema \
-  --entities examples/receipt_third_party_notary/entities.example.json \
-  --request-json examples/receipt_third_party_notary/request.example.json
+```python
+import cedarpy, json
+
+policies = (
+    'permit ( principal, action, resource );\n'
+    + open("policies/receipt_third_party_notary.cedar").read()
+)
+req = json.load(open("examples/receipt_third_party_notary/request.example.json"))
+ent = open("examples/receipt_third_party_notary/entities.example.json").read()
+
+print(cedarpy.is_authorized(req, policies, ent).decision.value)   # Allow
 ```
 
-The CLI prints `ALLOW`. Flip `captureTopology` to `self_signed` and rerun; the CLI prints `DENY` with the matching `forbid` policy ID `receipt-third-party-notary`.
+Flip `captureTopology` to `self_signed` in the request and rerun; the decision
+flips to `Deny`, determined by the `forbid` policy id `receipt-third-party-notary`.
+The `cedar authorize` CLI (`cargo install cedar-policy-cli`) takes the same
+policy, schema, entities, and request files if you prefer Rust.
 
 ## Where the receipt comes from
 

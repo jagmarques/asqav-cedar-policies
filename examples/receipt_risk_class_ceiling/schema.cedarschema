@@ -1,0 +1,31 @@
+// Schema fragment for receipt_risk_class_ceiling.cedar.
+//
+// Agent / Tool / ToolInvocation are illustrative host entities. A host built
+// on the cedar-for-agents schema generator instead sees User (principal) and
+// McpServer (resource) with one action per tool; adapt these names to the
+// schema your generator already emits and keep the context.receipt shape.
+
+entity Agent {
+    homeTenant: String,
+};
+
+entity Tool;
+
+entity ToolInvocation {
+    owningTenant: String,
+};
+
+type Receipt = {
+    risk_class: String,
+    policyDecision: String,
+    issuer_id: String,
+    action_ref: String,
+};
+
+action "invoke" appliesTo {
+    principal: [Agent],
+    resource: [ToolInvocation],
+    context: {
+        receipt: Receipt,
+    },
+};

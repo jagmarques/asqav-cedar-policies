@@ -1,0 +1,29 @@
+// Schema fragment for receipt_chain_validity.cedar.
+//
+// Agent / Tool / ToolInvocation are illustrative host entities. A host built
+// on the cedar-for-agents schema generator instead sees User (principal) and
+// McpServer (resource); adapt these names to your generated schema and keep
+// the context shape (receipt.prevHash plus priorReceiptHash).
+
+entity Agent {
+    homeTenant: String,
+};
+
+entity Tool;
+
+entity ToolInvocation {
+    owningTenant: String,
+};
+
+type Receipt = {
+    prevHash: String,
+};
+
+action "invoke" appliesTo {
+    principal: [Agent],
+    resource: [ToolInvocation],
+    context: {
+        receipt: Receipt,
+        priorReceiptHash: String,
+    },
+};

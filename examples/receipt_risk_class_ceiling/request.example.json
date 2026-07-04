@@ -1,0 +1,13 @@
+{
+  "principal": { "type": "Agent", "id": "agt_demo" },
+  "action": { "type": "Tool", "id": "search.web" },
+  "resource": { "type": "ToolInvocation", "id": "inv_513" },
+  "context": {
+    "receipt": {
+      "risk_class": "high",
+      "policyDecision": "permit",
+      "issuer_id": "org_demo",
+      "action_ref": "sha256:9b74c9897bac770ffc029102a200c5de"
+    }
+  }
+}
