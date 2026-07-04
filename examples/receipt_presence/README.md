@@ -19,13 +19,22 @@ Minimal host-side scenario for `policies/receipt_presence_decision_matches.cedar
 }
 ```
 
+## Files in this folder
+
+- `schema.cedarschema` - entity fragment plus the `Receipt` context shape.
+- `entities.example.json` - one `Agent`, one `Tool`, one `ToolInvocation`.
+- `request.example.json` - a request whose receipt is `policyDecision: "permit"`.
+
 ## Expected decision
 
-`isAuthorized` returns `Allow` because the receipt is present and `policyDecision == "permit"`.
+This template is a `forbid` guardrail. Load it next to a `permit` policy (see the
+pack `QUICKSTART.md`). With that `permit` and `policyDecision == "permit"`, the
+guardrail stays silent and the call is `Allow`. In isolation, with no `permit`,
+Cedar's default-deny returns `Deny`.
 
 ## Failure mode
 
-Remove `context.receipt` or set `context.receipt.policyDecision` to anything other than `"permit"` and the policy returns `Deny`.
+Remove `context.receipt` or set `context.receipt.policyDecision` to anything other than `"permit"` and the guardrail fires, overriding the `permit`, so the decision is `Deny`.
 
 ## Notes for host implementors
 

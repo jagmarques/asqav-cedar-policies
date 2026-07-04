@@ -1,0 +1,30 @@
+// Schema fragment for receipt_presence_decision_matches.cedar.
+//
+// Agent / Tool / ToolInvocation are illustrative host entities. A host built
+// on the cedar-for-agents schema generator instead sees User (principal) and
+// McpServer (resource); adapt these names to your generated schema and keep
+// the context.receipt shape.
+
+entity Agent {
+    homeTenant: String,
+};
+
+entity Tool;
+
+entity ToolInvocation {
+    owningTenant: String,
+};
+
+type Receipt = {
+    policyDecision: String,
+    issuer_id: String,
+    action_ref: String,
+};
+
+action "invoke" appliesTo {
+    principal: [Agent],
+    resource: [ToolInvocation],
+    context: {
+        receipt: Receipt,
+    },
+};
