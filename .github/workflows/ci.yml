@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate JSON examples
+        run: |
+          set -euo pipefail
+          count=0
+          while IFS= read -r -d '' f; do
+            test -s "$f" || { echo "empty JSON file: $f"; exit 1; }
+            python3 -m json.tool "$f" > /dev/null
+            echo "ok: $f"
+            count=$((count + 1))
+          done < <(find . -name '*.json' -not -path './.git/*' -print0)
+          test "$count" -gt 0 || { echo "no JSON files found"; exit 1; }
+          echo "validated $count JSON files"
+
+      - name: Cache Cedar CLI
+        id: cache-cedar
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cedar
+          key: cedar-cli-4.11.2-${{ runner.os }}
+
+      - name: Install Cedar CLI
+        run: |
+          set -euo pipefail
+          # Reinstall if the cache missed or restored a binary that will not run.
+          if ! cedar --version 2>/dev/null; then
+            cargo install cedar-policy-cli --version 4.11.2
+          fi
+          cedar --version
+
+      - name: Cedar parse (policies and schemas)
+        run: |
+          set -euo pipefail
+          for p in policies/*.cedar; do
+            test -s "$p" || { echo "empty policy file: $p"; exit 1; }
+            cedar check-parse --policies "$p" --policy-format cedar
+            echo "parsed policy: $p"
+          done
+          for s in examples/*/schema.cedarschema; do
+            test -s "$s" || { echo "empty schema file: $s"; exit 1; }
+            cedar check-parse --schema "$s" --schema-format cedar
+            echo "parsed schema: $s"
+          done
+
+      - name: Cedar validate policies against schemas
+        run: |
+          set -euo pipefail
+          # Each policy is validated against the example schema whose directory
+          # name is the longest prefix of the policy file name. Missing schema
+          # fails the job rather than skipping the policy.
+          set -- policies/*.cedar
+          total=$#
+          validated=0
+          for p in policies/*.cedar; do
+            base="$(basename "$p" .cedar)"
+            schema=""
+            best=0
+            for d in examples/*/; do
+              dn="$(basename "$d")"
+              if [ "$base" = "$dn" ] || [ "${base#"${dn}"_}" != "$base" ]; then
+                if [ "${#dn}" -gt "$best" ]; then
+                  schema="${d}schema.cedarschema"
+                  best="${#dn}"
+                fi
+              fi
+            done
+            if [ -z "$schema" ]; then
+              echo "no matching example schema for $p"; exit 1
+            fi
+            cedar validate \
+              --schema "$schema" --schema-format cedar \
+              --policies "$p" --policy-format cedar \
+              --deny-warnings
+            echo "validated: $p vs $schema"
+            validated=$((validated + 1))
+          done
+          test "$validated" = "$total" || { echo "validated $validated of $total policies"; exit 1; }
+          echo "validated all $validated policies against their schemas"
+
+      - name: Cedar entity conformance
+        run: |
+          set -euo pipefail
+          for d in examples/*/; do
+            s="${d}schema.cedarschema"
+            e="${d}entities.example.json"
+            test -f "$s" && test -f "$e" || { echo "missing schema or entities in $d"; exit 1; }
+            cedar check-parse --schema "$s" --schema-format cedar --entities "$e"
+            echo "entities conform: $e"
+          done
+
+  ci-ok:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - run: echo "CI passed"
