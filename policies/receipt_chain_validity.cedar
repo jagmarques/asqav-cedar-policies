@@ -5,8 +5,9 @@
 //
 // The host is responsible for computing and supplying both fields; Cedar
 // only checks string equality. The host MUST pass `context.priorReceiptHash`
-// as the canonical-JSON-serialised SHA-256 of the previous receipt, and the
-// signed receipt itself MUST carry `prevHash` in the same canonical form.
+// as SHA-256 over the JCS (RFC 8785) canonical bytes of the previous
+// receipt's signed payload member (the wire key previousReceiptHash), and
+// the signed receipt itself MUST carry `prevHash` in the same canonical form.
 //
 // Expected context shape:
 //   context.receipt is { prevHash: String, ... }

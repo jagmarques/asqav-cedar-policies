@@ -50,11 +50,13 @@ The response carries the fields you gate on. Trimmed to what matters here:
 }
 ```
 
-`verified` is the top-level verdict. `payload.decision` is the recorded policy
+`verified` is the top-level verdict; a receipt carrying a keyed context digest
+reports `verified_keyed` instead (signature valid, digest not third-party
+re-derivable without the holder salt). `payload.decision` is the recorded policy
 outcome, and its vocabulary is `allow | deny | rate_limit | observation`.
 `payload.risk_class` uses `low | medium | high | critical`. Do the signature and
-freshness checks here, upstream of Cedar. Cedar treats the receipt as structured
-context, it does not recompute cryptography.
+validity-window checks here, upstream of Cedar. Cedar treats the receipt as
+structured context, it does not recompute cryptography.
 
 ## Step 2: project the receipt onto a Cedar context
 

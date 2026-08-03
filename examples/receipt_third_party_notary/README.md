@@ -99,6 +99,6 @@ The host's verifier produces the `receipt` object. The receipt format and signat
 
 ## Notes for host implementors
 
-- The five-value `captureTopology` vocabulary is locked at the receipt-format layer. Do not invent a sixth value inside Cedar; if you need a different distinction (e.g. `escrow_notary`), open an issue against the IETF draft first so the vocabulary stays single-sourced.
+- The six-value `captureTopology` vocabulary (`in_process_sdk`, `network_proxy`, `browser_extension`, `ebpf_observer`, `mcp_proxy`, `passive_telemetry`) is locked at the receipt-format layer. Do not invent a seventh value inside Cedar; if you need a different distinction (e.g. `escrow_notary`), open an issue against the IETF draft first so the vocabulary stays single-sourced.
 - `allowedNotaries` SHOULD be tenant-scoped. Loading a global allow-list across all tenants defeats the purpose of binding the policy to the customer's authz layer.
-- `expiry == 0` is reserved for non-expiring receipts (e.g. audit-only captures); operational deployments SHOULD set a finite expiry and rely on the freshness check baked into this template.
+- `expiry == 0` is reserved for non-expiring receipts (e.g. audit-only captures), mirroring the IETF profile where `expires_at` is OPTIONAL and a receipt without it carries no validity window; operational deployments SHOULD set a finite expiry and rely on the validity-window check baked into this template.
