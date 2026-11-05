@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, hz-ci-light]
     steps:
       - uses: actions/checkout@v4
 
@@ -109,7 +109,7 @@ jobs:
           done
 
   ci-ok:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, hz-ci-light]
     needs: validate
     steps:
       - run: echo "CI passed"
