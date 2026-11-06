@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, hz-ci-light]
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +37,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/bin/cedar
-          key: cedar-cli-4.11.2-${{ runner.os }}
+          key: cedar-cli-4.11.2-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Install Rust toolchain
+        run: |
+          command -v cargo >/dev/null || curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
 
       - name: Install Cedar CLI
         run: |
@@ -109,7 +114,7 @@ jobs:
           done
 
   ci-ok:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, hz-ci-light]
     needs: validate
     steps:
       - run: echo "CI passed"
